@@ -35,6 +35,7 @@
         linear-gradient(135deg, #05070d 0%, #0d0d17 28%, #120d1b 55%, #080b11 100%);
       color: var(--text);
       min-height: 100vh;
+      cursor: none;
     }
 
     body {
@@ -394,6 +395,15 @@
       font-size: 0.96rem;
     }
 
+    #pixel-lady {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
+
     @media (max-width: 960px) {
       .hero {
         grid-template-columns: 1fr;
@@ -439,6 +449,8 @@
   </style>
 </head>
 <body>
+  <canvas id="pixel-lady"></canvas>
+
   <div class="page">
     <header>
       <div class="nav">
@@ -533,5 +545,85 @@
       </section>
     </main>
   </div>
+
+  <script>
+    const canvas = document.getElementById("pixel-lady");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = 64;
+    canvas.height = 96;
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let time = 0;
+
+    const SCALE = 3;
+    canvas.style.width = (64 * SCALE) + "px";
+    canvas.style.height = (96 * SCALE) + "px";
+
+    function drawPixelLady(frame) {
+      ctx.fillStyle = "rgba(0,0,0,0)";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const headX = 32;
+      const headY = 12;
+      const bodyX = 32;
+      const bodyY = 28;
+
+      ctx.fillStyle = "#f8d7c9";
+      drawPixelSquare(ctx, headX - 6, headY - 6, 12, 12);
+
+      ctx.fillStyle = "#111827";
+      drawPixelSquare(ctx, headX - 3, headY - 3, 2, 2);
+      drawPixelSquare(ctx, headX + 2, headY - 3, 2, 2);
+
+      ctx.fillStyle = "#7c2d12";
+      drawPixelSquare(ctx, headX - 2, headY + 2, 4, 1);
+
+      ctx.fillStyle = "#a855f7";
+      drawPixelSquare(ctx, bodyX - 5, bodyY, 10, 14);
+
+      const frameOffset = Math.floor(frame / 6) % 2;
+
+      ctx.fillStyle = "#b9afd5";
+      const leftArmX = bodyX - 6 + (frameOffset * 3);
+      drawPixelSquare(ctx, leftArmX - 6, bodyY + 2, 6, 3);
+
+      const rightArmX = bodyX + 6 - (frameOffset * 3);
+      drawPixelSquare(ctx, rightArmX, bodyY + 2, 6, 3);
+
+      ctx.fillStyle = "#f8d7c9";
+      const leftLegX = bodyX - 3 + (frameOffset * 2);
+      drawPixelSquare(ctx, leftLegX - 2, bodyY + 14, 3, 8);
+
+      const rightLegX = bodyX + 3 - (frameOffset * 2);
+      drawPixelSquare(ctx, rightLegX - 1, bodyY + 14, 3, 8);
+
+      ctx.fillStyle = "#2d1810";
+      drawPixelSquare(ctx, leftLegX - 2, bodyY + 22, 3, 2);
+      drawPixelSquare(ctx, rightLegX - 1, bodyY + 22, 3, 2);
+    }
+
+    function drawPixelSquare(ctx, x, y, w, h) {
+      ctx.fillRect(x, y, w, h);
+    }
+
+    document.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function animate() {
+      time++;
+      drawPixelLady(time);
+
+      canvas.style.left = (mouseX - (32 * SCALE) / 2) + "px";
+      canvas.style.top = (mouseY - (96 * SCALE) / 2) + "px";
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
 </body>
 </html>
