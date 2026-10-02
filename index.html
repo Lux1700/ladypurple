@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playful Motion Studio</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: rgba(255,255,255,0.7);
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #7c3aed;
+      --primary-2: #06b6d4;
+      --accent: #f472b6;
+      --shadow: rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 20px 0 10px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(255,255,255,0.65);
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 30px var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      position: relative;
+      box-shadow: 0 8px 18px rgba(124, 58, 237, 0.35);
+    }
+
+    .logo::before {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 14px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(99, 102, 241, 0.26);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 28px;
+      align-items: center;
+      padding: 40px 0 20px;
+    }
+
+    .hero-copy {
+      padding: 10px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(125, 211, 252, 0.22);
+      color: #0f766e;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 5vw, 5rem);
+      letter-spacing: -0.05em;
+      line-height: 0.92;
+    }
+
+    .hero-copy p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 22px 0 28px;
+      max-width: 560px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn, .secondary-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .primary-btn:hover, .secondary-btn:hover, .nav-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      box-shadow: 0 18px 35px rgba(124, 58, 237, 0.28);
+    }
+
+    .secondary-btn {
+      background: rgba(255,255,255,0.7);
+      color: var(--text);
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .stats {
+      display: flex;
+      gap: 30px;
+      padding-top: 26px;
+      flex-wrap: wrap;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .showcase {
+      position: relative;
+      min-height: 560px;
+    }
+
+    .device {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.68), rgba(255,255,255,0.2));
+      border: 1px solid rgba(148,163,184,0.25);
+      box-shadow: 0 28px 60px rgba(15, 23, 42, 0.18);
+      padding: 14px;
+      backdrop-filter: blur(5px);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #7dd3fc, #93c5fd, #dbeafe);
+      overflow: hidden;
+    }
+
+    .floating-card {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(15,23,42,0.7);
+      color: white;
+      padding: 12px 14px;
+      border-radius: 16px;
+      box-shadow: 0 18px 30px rgba(15,23,42,0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .floating-card strong {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 3px;
+    }
+
+    .floating-card span {
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .content {
+      padding: 40px 0 80px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.18));
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+    }
+
+    .feature p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase {
+        order: -1;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+      }
+
+      .device, .showcase {
+        min-height: 420px;
+      }
+
+      .nav {
+        padding: 12px 14px;
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <div class="logo"></div>
+          <span>Playful Motion</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="#">Home</a>
+          <a href="#">Work</a>
+          <a href="#">Studio</a>
+          <a href="#">Pricing</a>
+        </div>
+
+        <button class="nav-button">Book a demo</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Interactive creative</div>
+          <h1>Bring motion to your story.</h1>
+          <p>
+            We design playful, memorable experiences that feel alive.
+            This lightweight interactive animation turns a simple idea into a modern web experience.
+          </p>
+
+          <div class="cta-row">
+            <button class="primary-btn">Launch project</button>
+            <button class="secondary-btn">Watch demo</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>120+</strong>
+              <span>projects shipped</span>
+            </div>
+            <div class="stat">
+              <strong>4.9/5</strong>
+              <span>client rating</span>
+            </div>
+            <div class="stat">
+              <strong>3x</strong>
+              <span>more engagement</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase">
+          <div class="device">
+            <canvas id="scene"></canvas>
+            <div class="floating-card">
+              <strong>Live</strong>
+              <span>Interactive motion</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-icon">✨</div>
+            <h3>Motion-first design</h3>
+            <p>Simple animation with personality helps your brand feel modern, clear, and emotionally engaging.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">🎯</div>
+            <h3>Clear storytelling</h3>
+            <p>Every interaction is designed to guide attention and keep viewers engaged without overwhelming them.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h3>Fast and lightweight</h3>
+            <p>Built with HTML, CSS, and Canvas to stay smooth, responsive, and easy to deploy anywhere.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
+
+    let mood = "day";
+    let playing = true;
+
+    const state = {
+      w: 0,
+      h: 0,
+      time: 0,
+      sunX: 0,
+      sunY: 0,
+      clouds: [],
+      sparkles: [],
+      character: {
+        x: 160,
+        y: 0,
+        dir: 1,
+        vx: 2.1,
+        jumpVel: 0,
+        floorY: 0,
+        size: 36
+      }
+    };
+
+    function resize() {
+      const ratio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      state.w = rect.width;
+      state.h = rect.height;
+      state.sunX = state.w * 0.8;
+      state.sunY = state.h * 0.22;
+      state.character.floorY = state.h * 0.8;
+      state.character.y = state.character.floorY - state.character.size * 0.9;
+
+      resetClouds();
+    }
+
+    function resetClouds() {
+      state.clouds = [];
+      for (let i = 0; i < 6; i++) {
+        state.clouds.push({
+          x: Math.random() * state.w,
+          y: 60 + Math.random() * 120,
+          r: 18 + Math.random() * 28,
+          speed: 0.25 + Math.random() * 0.7,
+          offset: Math.random() * 1000
+        });
+      }
+    }
+
+    function createSparkles(x, y, count = 18) {
+      for (let i = 0; i < count; i++) {
+        state.sparkles.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 4,
+          vy: (Math.random() - 0.5) * 4,
+          r: 2 + Math.random() * 4,
+          life: 30 + Math.random() * 35,
+          color: i % 2 ? "#fef3c7" : "#f9a8d4"
+        });
+      }
+    }
+
+    function drawBackground() {
+      const sky = mood === "day"
+        ? ["#7dd3fc", "#93c5fd", "#dbeafe"]
+        : ["#0f172a", "#1d4ed8", "#312e81"];
+
+      const g = ctx.createLinearGradient(0, 0, 0, state.h);
+      g.addColorStop(0, sky[0]);
+      g.addColorStop(0.5, sky[1]);
+      g.addColorStop(1, sky[2]);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, state.w, state.h);
+
+      const sunScale = 1 + Math.sin(state.time * 0.0025) * 0.08;
+      ctx.beginPath();
+      ctx.fillStyle = mood === "day" ? "#facc15" : "#dbeafe";
+      ctx.arc(state.sunX, state.sunY, 42 * sunScale, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = mood === "day" ? "rgba(14, 116, 144, 0.28)" : "rgba(30, 41, 59, 0.52)";
+      ctx.beginPath();
+      ctx.moveTo(0, state.h * 0.74);
+      ctx.quadraticCurveTo(state.w * 0.15, state.h * 0.62, state.w * 0.32, state.h * 0.75);
+      ctx.quadraticCurveTo(state.w * 0.5, state.h * 0.58, state.w * 0.73, state.h * 0.74);
+      ctx.quadraticCurveTo(state.w * 0.9, state.h * 0.66, state.w, state.h * 0.72);
+      ctx.lineTo(state.w, state.h);
+      ctx.lineTo(0, state.h);
+      ctx.closePath();
+      ctx.fill();
+
+      for (const cloud of state.clouds) {
+        const x = ((cloud.x + state.time * cloud.speed * 0.08 + cloud.offset) % (state.w + 220)) - 100;
+        const y = cloud.y + Math.sin(state.time * 0.001 + cloud.offset) * 6;
+
+        ctx.fillStyle = mood === "day" ? "rgba(255,255,255,0.7)" : "rgba(148,163,184,0.18)";
+        ctx.beginPath();
+        ctx.arc(x, y, cloud.r, 0, Math.PI * 2);
+        ctx.arc(x + cloud.r * 1.35, y - 8, cloud.r * 0.8, 0, Math.PI * 2);
+        ctx.arc(x + cloud.r * 2.5, y + 2, cloud.r * 1.1, 0, Math.PI * 2);
+        ctx.arc(x + cloud.r * 3.8, y - 5, cloud.r * 0.85, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawGround() {
+      const groundY = state.h * 0.8;
+
+      ctx.fillStyle = mood === "day" ? "#0f766e" : "#111827";
+      ctx.fillRect(0, groundY, state.w, state.h - groundY);
+
+      ctx.fillStyle = mood === "day" ? "#115e59" : "#1f2937";
+      ctx.beginPath();
+      ctx.moveTo(0, groundY);
+      for (let x = 0; x <= state.w; x += 60) {
+        const y = groundY + Math.sin((x + state.time * 0.02) * 0.06) * 8;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(state.w, state.h);
+      ctx.lineTo(0, state.h);
+      ctx.closePath();
+      ctx.fill();
+
+      for (let i = 0; i < 7; i++) {
+        const x = 70 + i * 150;
+        const trunkH = 72;
+        const baseY = groundY - 5;
+
+        ctx.fillStyle = "#7c3f1d";
+        ctx.fillRect(x, baseY, 16, trunkH);
+
+        ctx.fillStyle = mood === "day" ? "#166534" : "#14532d";
+        ctx.beginPath();
+        ctx.arc(x + 8, baseY - 8, 26, 0, Math.PI * 2);
+        ctx.arc(x - 14, baseY + 2, 22, 0, Math.PI * 2);
+        ctx.arc(x + 24, baseY + 8, 21, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawCharacter() {
+      const c = state.character;
+      const x = c.x;
+      const y = c.y + Math.sin(state.time * 0.005) * 7;
+
+      ctx.fillStyle = "rgba(15, 23, 42, 0.18)";
+      ctx.beginPath();
+      ctx.ellipse(x, c.floorY + 10, 28, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#f472b6";
+      ctx.beginPath();
+      ctx.ellipse(x, y, 18, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#f8d7c9";
+      ctx.beginPath();
+      ctx.arc(x, y - 28, 14, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#111827";
+      ctx.beginPath();
+      ctx.arc(x - 3, y - 30, 5, 0, Math.PI * 2);
+      ctx.arc(x + 6, y - 30, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#7c2d12";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y - 24, 6, 0.2, Math.PI - 0.2);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#1f2937";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(x - 7, y + 18);
+      ctx.lineTo(x - 12, y + 34);
+      ctx.moveTo(x + 7, y + 18);
+      ctx.lineTo(x + 12, y + 34);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x - 14, y - 2);
+      ctx.lineTo(x - 28, y + 10);
+      ctx.moveTo(x + 14, y - 2);
+      ctx.lineTo(x + 28, y + 10);
+      ctx.stroke();
+
+      for (let i = 0; i < 2; i++) {
+        const t = state.time * 0.03 + i * 16;
+        const trailX = x - c.dir * (20 + (t % 10));
+        const trailY = y - 10 + Math.sin(t * 0.9) * 6;
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.beginPath();
+        ctx.arc(trailX, trailY, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawSparkles() {
+      for (let i = state.sparkles.length - 1; i >= 0; i--) {
+        const s = state.sparkles[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life -= 1;
+
+        if (s.life <= 0) {
+          state.sparkles.splice(i, 1);
+          continue;
+        }
+
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = Math.max(0, s.life / 45);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function update() {
+      if (playing) {
+        state.time += 1;
+
+        const c = state.character;
+        c.x += c.vx * c.dir;
+
+        if (c.x > state.w - 80 || c.x < 80) {
+          c.dir *= -1;
+          c.x = Math.max(80, Math.min(state.w - 80, c.x));
+        }
+
+        c.jumpVel += 0.5;
+        c.y += c.jumpVel;
+        if (c.y >= c.floorY - 38) {
+          c.y = c.floorY - 38;
+          c.jumpVel = 0;
+        }
+      }
+    }
+
+    function render() {
+      drawBackground();
+      drawGround();
+      drawCharacter();
+      drawSparkles();
+    }
+
+    function animate() {
+      update();
+      render();
+      requestAnimationFrame(animate);
+    }
+
+    function toggleMotion() {
+      playing = !playing;
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      state.character.jumpVel = -11.5;
+      state.character.x = Math.max(80, Math.min(state.w - 80, x));
+      createSparkles(x, y, 18);
+
+      if (state.character.dir === 1 && x < state.character.x) {
+        state.character.dir = -1;
+      } else if (state.character.dir === -1 && x > state.character.x) {
+        state.character.dir = 1;
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key.toLowerCase() === " ") {
+        event.preventDefault();
+        toggleMotion();
+      }
+      if (event.key.toLowerCase() === "m") {
+        mood = mood === "day" ? "night" : "day";
+        createSparkles(state.w * 0.8, state.h * 0.2, 18);
+      }
+    });
+
+    window.addEventListener("resize", resize);
+
+    resize();
+    animate();
+  </script>
+</body>
+</html>
