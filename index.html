@@ -402,6 +402,45 @@
       image-rendering: pixelated;
       image-rendering: -moz-crisp-edges;
       image-rendering: crisp-edges;
+      filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.7));
+    }
+
+    .cursor-glow,
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.08s ease-out, opacity 0.18s ease;
+    }
+
+    .cursor-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f5d0fe, #c084fc);
+      box-shadow: 0 0 18px rgba(192, 132, 252, 0.8);
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-ring {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(196, 181, 253, 0.9);
+      border-radius: 50%;
+      background: rgba(168, 85, 247, 0.08);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+    }
+
+    .cursor-ring::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.35);
     }
 
     @media (max-width: 960px) {
@@ -449,6 +488,8 @@
   </style>
 </head>
 <body>
+  <div class="cursor-ring"></div>
+  <div class="cursor-dot"></div>
   <canvas id="pixel-lady"></canvas>
 
   <div class="page">
@@ -549,6 +590,8 @@
   <script>
     const canvas = document.getElementById("pixel-lady");
     const ctx = canvas.getContext("2d");
+    const cursorRing = document.querySelector(".cursor-ring");
+    const cursorDot = document.querySelector(".cursor-dot");
 
     canvas.width = 64;
     canvas.height = 96;
@@ -562,7 +605,6 @@
     canvas.style.height = (96 * SCALE) + "px";
 
     function drawPixelLady(frame) {
-      ctx.fillStyle = "rgba(0,0,0,0)";
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const headX = 32;
@@ -611,14 +653,29 @@
     document.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      const ringX = e.clientX;
+      const ringY = e.clientY;
+
+      cursorRing.style.left = ringX + "px";
+      cursorRing.style.top = ringY + "px";
+      cursorDot.style.left = ringX + "px";
+      cursorDot.style.top = ringY + "px";
     });
 
     function animate() {
       time++;
       drawPixelLady(time);
 
-      canvas.style.left = (mouseX - (32 * SCALE) / 2) + "px";
-      canvas.style.top = (mouseY - (96 * SCALE) / 2) + "px";
+      const offsetX = mouseX - (32 * SCALE) / 2;
+      const offsetY = mouseY - (96 * SCALE) / 2;
+
+      canvas.style.left = offsetX + "px";
+      canvas.style.top = offsetY + "px";
+
+      const ringPulse = 1 + Math.sin(time * 0.12) * 0.08;
+      cursorRing.style.transform = `translate(-50%, -50%) scale(${ringPulse})`;
+      cursorDot.style.transform = `translate(-50%, -50%) scale(${1 + Math.sin(time * 0.2) * 0.08})`;
 
       requestAnimationFrame(animate);
     }
